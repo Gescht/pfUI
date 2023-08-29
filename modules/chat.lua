@@ -749,7 +749,7 @@ pfUI:RegisterModule("chat", "vanilla:tbc", function ()
         local real, _ = strsplit(":", name)
         local color = unknowncolorhex
         local match = false
-        local class = GetUnitData(real)
+        local class, level = GetUnitData(real)
 
         if class then
           if class ~= UNKNOWN then
@@ -759,10 +759,15 @@ pfUI:RegisterModule("chat", "vanilla:tbc", function ()
         elseif C.chat.text.whosearchunknown == "1" then
           ScanWhoName(name)
         end
+		if not level then
+			level = ""
+		else
+			level = level..":"
+		end
 
         if C.chat.text.tintunknown == "1" or match then
           text = string.gsub(text, "|Hplayer:"..name.."|h%["..real.."%]|h(.-:-)",
-            left..color.."|Hplayer:"..name.."|h" .. color .. real .. "|h|r"..right.."%1")
+            left..color.."|Hplayer:"..name.."|h" .. color ..level.. real .. "|h|r"..right.."%1")
         end
       end
     end
