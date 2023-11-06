@@ -300,6 +300,11 @@ pfUI:SetScript("OnEvent", function()
     pfUI.version.fix   = tonumber(fix)   or 0
     pfUI.version.string = pfUI.version.major .. "." .. pfUI.version.minor .. "." .. pfUI.version.fix
 
+    -- use "Modern" as default profile on a fresh install
+    if pfUI.api.isempty(pfUI_init) and pfUI.api.isempty(pfUI_config) then
+      pfUI_config = pfUI.api.CopyTable(pfUI_profiles["Modern"])
+    end
+
     pfUI:LoadConfig()
     pfUI:MigrateConfig()
     pfUI:UpdateFonts()
@@ -391,6 +396,7 @@ function pfUI.SetupCVars()
   SHOW_BUFF_DURATIONS = "1"
   QUEST_FADING_DISABLE = "1"
   NAMEPLATES_ON = "1"
+  SIMPLE_CHAT = "0"
 
   SHOW_COMBAT_TEXT = "1"
   COMBAT_TEXT_SHOW_LOW_HEALTH_MANA = "1"
