@@ -302,7 +302,7 @@ pfUI:SetScript("OnEvent", function()
 
     -- use "Modern" as default profile on a fresh install
     if pfUI.api.isempty(pfUI_init) and pfUI.api.isempty(pfUI_config) then
-      pfUI_config = pfUI.api.CopyTable(pfUI_profiles["Modern"])
+      pfUI_config = pfUI.api.CopyTable(pfUI_profiles["Modern"]) or {}
     end
 
     pfUI:LoadConfig()
@@ -369,7 +369,7 @@ pfUI.backdrop_blizz_full = {
 message = function(msg)
   DEFAULT_CHAT_FRAME:AddMessage("|cffcccc33INFO: |cffffff55" .. ( msg or "nil" ))
 end
-print = message
+print = print or message
 
 error = function(msg)
   if PF_DEBUG_MODE then message(debugstack()) end
