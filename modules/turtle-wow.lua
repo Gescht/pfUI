@@ -7,7 +7,9 @@ pfUI:RegisterModule("turtle-wow", "vanilla", function ()
     this:Hide()
 
     -- custom debuff durations
-    pfUI_locale["enUS"]["debuffs"]["Hand of Reckoning"] = { [0] = 3.0 }
+    L["debuffs"]["Hand of Reckoning"] = {[0]=3.0}
+    L["debuffs"]['Insect Swarm'] = {[0]=18.0}
+    L["debuffs"]['Moonfire'] = {[1]=9.0,[2]=18.0,[3]=18.0,[4]=18.0,[5]=18.0,[6]=18.0,[7]=18.0,[8]=18.0,[9]=18.0,[10]=18.0,[0]=18.0}
 
     -- add tree of life druid form to autoshift
     if pfUI.autoshift then
@@ -41,67 +43,13 @@ pfUI:RegisterModule("turtle-wow", "vanilla", function ()
       WorldMapFrameTitle:Hide()
     end
 
-    -- add Trueshot recognition to to custom castbars.
-    if not libcast.customcast["trueshot"] then
-      -- add trueshot to pfUI's custom casts
-      local player = UnitName("player")
-
-      -- add locales
-      pfUI_locale["enUS"]["customcast"]["TRUESHOT"] = "Trueshot"
-      pfUI_locale["zhCN"]["customcast"]["TRUESHOT"] = "稳固射击"
-      local trueshot = L["customcast"]["TRUESHOT"]
-
-      libcast.customcast[strlower(trueshot)] = function(begin, duration)
-        if begin then
-          -- cast time is 1sec, however it takes 1.4sec to fire in average
-          local duration = duration or 1400
-
-          for i=1,32 do
-            if UnitBuff("player", i) == "Interface\\Icons\\Racial_Troll_Berserk" then
-              local berserk = 0.3
-              if((UnitHealth("player")/UnitHealthMax("player")) >= 0.40) then
-                berserk = (1.30 - (UnitHealth("player") / UnitHealthMax("player"))) / 3
-              end
-              duration = duration / (1 + berserk)
-            elseif UnitBuff("player", i) == "Interface\\Icons\\Ability_Hunter_RunningShot" then
-              duration = duration / 1.4
-            elseif UnitBuff("player", i) == "Interface\\Icons\\Ability_Warrior_InnerRage" then
-              duration = duration / 1.3
-            elseif UnitBuff("player", i) == "Interface\\Icons\\Inv_Trinket_Naxxramas04" then
-              duration = duration / 1.2
-            end
-          end
-
-          local _,_, lag = GetNetStats()
-          local start = GetTime() + lag/1000
-
-          -- add cast action to the database
-          libcast.db[player].cast = trueshot
-          libcast.db[player].rank = lastrank
-          libcast.db[player].start = start
-          libcast.db[player].casttime = duration
-          libcast.db[player].icon = "Interface\\Icons\\Ability_hunter_steadyshot"
-          libcast.db[player].channel = nil
-        else
-          -- remove cast action to the database
-          libcast.db[player].cast = nil
-          libcast.db[player].rank = nil
-          libcast.db[player].start = nil
-          libcast.db[player].casttime = nil
-          libcast.db[player].icon = nil
-          libcast.db[player].channel = nil
-        end
-      end
-    end
-
-    -- refresh paladin judgements on holy strike
-    -- taken from: https://github.com/doorknob6/pfUI-turtle/blob/master/modules/debuffs.lua
     HookScript(libdebuff, "OnEvent", function()
       if event == "CHAT_MSG_SPELL_SELF_DAMAGE" then
-        local spell = string.find(string.sub(arg1,6,17), "Holy Strike")
-
-        --arg2 is holy dmg when it hits, nil when it misses
-        if spell and arg2 then
+        -- refresh paladin judgements on holy strike
+        -- taken from: https://github.com/doorknob6/pfUI-turtle/blob/master/modules/debuffs.lua
+        local holystrike = string.find(string.sub(arg1,6,17), "Holy Strike")
+        --arg2 is spell dmg when it hits, nil when it misses
+        if holystrike and arg2 then
           for seal in L["judgements"] do
             local name = UnitName("target")
             local level = UnitLevel("target")
@@ -117,12 +65,24 @@ pfUI:RegisterModule("turtle-wow", "vanilla", function ()
             end
           end
         end
+
+        -- refresh Immolate duration after cast Conflagrate
+        local conflagrate = string.find(string.sub(arg1,6,17), "Conflagrate")
+        --arg2 is spell dmg when it hits, nil when it misses
+        if conflagrate and arg2 then
+          local name = UnitName("target")
+          local level = UnitLevel("target")
+          if libdebuff.objects[name] and libdebuff.objects[name][level] and libdebuff.objects[name][level]["Immolate"] then
+            local duration = libdebuff.objects[name][level]["Immolate"].duration
+            libdebuff:UpdateDuration(name, level, "Immolate", duration - 3)
+          end
+        end
       end
     end)
 
     -- skin title dropdown menu
     -- taken from: https://github.com/doorknob6/pfUI-turtle/blob/master/skins/turtle/character.lua
-    if TWTitles and pfUI_config["disabled"]["skin_Character"] ~= "1" then
+    if TWTitles and pfUI.skin["Character"] and pfUI_config["disabled"]["skin_Character"] ~= "1" then
       CharacterLevelText:SetPoint("TOP", CharacterNameText, "BOTTOM", 0, -2)
       SkinDropDown(TWTitles)
       TWTitles:SetPoint("TOP", CharacterGuildText, "BOTTOM", 0, -2)
@@ -133,10 +93,23 @@ pfUI:RegisterModule("turtle-wow", "vanilla", function ()
 
   -- rearrange twow's profession window additions
   HookAddonOrVariable("Blizzard_TradeSkillUI", function()
-    if TradeSkillSkillCheckButton and pfUI_config["disabled"]["skin_Profession"] ~= "1" then
+    if TradeSkillSkillCheckButton and pfUI.skin["Profession"] and pfUI_config["disabled"]["skin_Profession"] ~= "1" then
+      SkinCheckbox(TradeSkillSkillCheckButton)
+      TradeSkillSkillCheckButton:SetWidth(24)
+      TradeSkillSkillCheckButton:SetHeight(24)
+
+      SkinCheckbox(TradeSkillMatsCheckButton)
+      TradeSkillMatsCheckButton:SetWidth(24)
+      TradeSkillMatsCheckButton:SetHeight(24)
+
+      TradeSkillSearchBox:DisableDrawLayer("BACKGROUND")
+      CreateBackdrop(TradeSkillSearchBox, nil, nil, 1)
+
       TradeSkillSkillCheckButton:SetPoint("TOPLEFT", 500, -2)
       TradeSkillMatsCheckButton:SetPoint("TOPLEFT", 400, -2)
-      TradeSkillSearchBox:SetPoint("TOPLEFT", 20, -520)
+
+      TradeSkillSearchBox:ClearAllPoints()
+      TradeSkillSearchBox:SetPoint("TOP", TradeSkillFrame, "BOTTOM", 0, -8)
     end
   end)
 
