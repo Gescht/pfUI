@@ -459,9 +459,11 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
     -- detect backdrop border color
     if quality and quality > tonumber(C.appearance.bags.borderlimit) then
       pfUI.bags[bag].slots[slot].frame.backdrop:SetBackdropBorderColor(GetItemQualityColor(quality))
+      pfUI.bags[bag].slots[slot].frame.backdrop:SetBackdropColor(GetItemQualityColor(quality))
     elseif texture then
       if itype == "Quest" then
         pfUI.bags[bag].slots[slot].frame.backdrop:SetBackdropBorderColor(1, .8, .2, .8)
+        pfUI.bags[bag].slots[slot].frame.backdrop:SetBackdropColor(1, .8, .2, .8)
         pfUI.bags[bag].slots[slot].frame.qtext:SetText("?")
       else
         pfUI.bags[bag].slots[slot].frame.backdrop:SetBackdropBorderColor(.5,.5,.5,1)
@@ -471,12 +473,16 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
 
       if bagtype == "QUIVER" then
         pfUI.bags[bag].slots[slot].frame.backdrop:SetBackdropBorderColor(1,1,.5,.5)
+        pfUI.bags[bag].slots[slot].frame.backdrop:SetBackdropColor(1,1,.5,.5)
       elseif bagtype == "SOULBAG" then
         pfUI.bags[bag].slots[slot].frame.backdrop:SetBackdropBorderColor(1,.5,.5,.5)
+        pfUI.bags[bag].slots[slot].frame.backdrop:SetBackdropColor(1,.5,.5,.5)
       elseif bagtype == "SPECIAL" then
         pfUI.bags[bag].slots[slot].frame.backdrop:SetBackdropBorderColor(.5,.5,1,.5)
+        pfUI.bags[bag].slots[slot].frame.backdrop:SetBackdropColor(.5,.5,1,.5)
       elseif bagtype == "KEYRING" then
         pfUI.bags[bag].slots[slot].frame.backdrop:SetBackdropBorderColor(.5,1,1,.5)
+        pfUI.bags[bag].slots[slot].frame.backdrop:SetBackdropColor(.5,1,1,.5)
       else
         pfUI.bags[bag].slots[slot].frame.backdrop:SetBackdropBorderColor(1,1,1,.2)
       end
