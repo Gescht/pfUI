@@ -478,16 +478,16 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
 
       if bagtype == "QUIVER" then
         pfUI.bags[bag].slots[slot].frame.backdrop:SetBackdropBorderColor(1,1,.5,.5)
-        pfUI.bags[bag].slots[slot].frame.backdrop:SetBackdropColor(1,1,.5,.5)
+        pfUI.bags[bag].slots[slot].frame.backdrop:SetBackdropColor(br, bg, bb, ba)
       elseif bagtype == "SOULBAG" then
         pfUI.bags[bag].slots[slot].frame.backdrop:SetBackdropBorderColor(1,.5,.5,.5)
-        pfUI.bags[bag].slots[slot].frame.backdrop:SetBackdropColor(1,.5,.5,.5)
+        pfUI.bags[bag].slots[slot].frame.backdrop:SetBackdropColor(br, bg, bb, ba)
       elseif bagtype == "SPECIAL" then
         pfUI.bags[bag].slots[slot].frame.backdrop:SetBackdropBorderColor(.5,.5,1,.5)
-        pfUI.bags[bag].slots[slot].frame.backdrop:SetBackdropColor(.5,.5,1,.5)
+        pfUI.bags[bag].slots[slot].frame.backdrop:SetBackdropColor(br, bg, bb, ba)
       elseif bagtype == "KEYRING" then
         pfUI.bags[bag].slots[slot].frame.backdrop:SetBackdropBorderColor(.5,1,1,.5)
-        pfUI.bags[bag].slots[slot].frame.backdrop:SetBackdropColor(.5,1,1,.5)
+        pfUI.bags[bag].slots[slot].frame.backdrop:SetBackdropColor(br, bg, bb, ba)
       else
         pfUI.bags[bag].slots[slot].frame.backdrop:SetBackdropBorderColor(1,1,1,.2)
         pfUI.bags[bag].slots[slot].frame.backdrop:SetBackdropColor(br, bg, bb, ba)
