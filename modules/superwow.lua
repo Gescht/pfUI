@@ -46,6 +46,44 @@ pfUI:RegisterModule("superwow", "vanilla", function ()
     end)
   end
 
+  -- Add native mouseover support
+  if SUPERWOW_VERSION and pfUI.uf and pfUI.uf.mouseover then
+    _G.SlashCmdList.PFCAST = function(msg)
+      local func = loadstring(msg or "")
+      local unit = "mouseover"
+
+      if not UnitExists(unit) then
+        local frame = GetMouseFocus()
+        if frame.label and frame.id then
+          unit = frame.label .. frame.id
+        elseif UnitExists("target") then
+          unit = "target"
+        elseif GetCVar("autoSelfCast") == "1" then
+          unit = "player"
+        else
+          return
+        end
+      end
+
+      if func then
+        -- set mouseover to target for script if needed
+        local switch_target = not UnitIsUnit("target", unit)
+        if switch_target then TargetUnit(unit) end
+        func()
+        if switch_target then TargetLastTarget() end
+      else
+        -- write temporary unit name
+        pfUI.uf.mouseover.unit = unit
+
+        -- cast spell to unitstr
+        CastSpellByName(msg, unit)
+
+        -- remove temporary mouseover unit
+        pfUI.uf.mouseover.unit = nil
+      end
+    end
+  end
+
   -- Add support for druid mana bars
   if SUPERWOW_VERSION and pfUI.uf and pfUI.uf.player and pfUI_config.unitframes.druidmanabar == "1" then
     local parent = pfUI.uf.player.power.bar
@@ -186,9 +224,34 @@ pfUI:RegisterModule("superwow", "vanilla", function ()
     end
   end
 
-  local unitcast = CreateFrame("Frame")
-  unitcast:RegisterEvent("UNIT_CASTEVENT")
-  unitcast:SetScript("OnEvent", function()
+  -- Enhance libdebuff with SuperWoW data
+  local superdebuff = CreateFrame("Frame")
+  superdebuff:RegisterEvent("UNIT_CASTEVENT")
+  superdebuff:SetScript("OnEvent", function()
+    -- variable assignments
+    local caster, target, event, spell, duration = arg1, arg2, arg3, arg4
+
+    -- skip other caster and empty target events
+    local _, guid = UnitExists("player")
+    if caster ~= guid then return end
+    if event ~= "CAST" then return end
+    if not target or target == "" then return end
+
+    -- assign all required data
+    local unit = UnitName(target)
+    local unitlevel = UnitLevel(target)
+    local effect, rank = SpellInfo(spell)
+    local duration = libdebuff:GetDuration(effect, rank)
+    local caster = "player"
+
+    -- add effect to current debuff data
+    libdebuff:AddEffect(unit, unitlevel, effect, duration, caster)
+  end)
+
+  -- Enhance libcast with SuperWoW data
+  local supercast = CreateFrame("Frame")
+  supercast:RegisterEvent("UNIT_CASTEVENT")
+  supercast:SetScript("OnEvent", function()
     if arg3 == "START" or arg3 == "CAST" or arg3 == "CHANNEL" then
       -- human readable argument list
       local guid = arg1
