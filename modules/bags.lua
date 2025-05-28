@@ -467,6 +467,7 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
         pfUI.bags[bag].slots[slot].frame.qtext:SetText("?")
       else
         pfUI.bags[bag].slots[slot].frame.backdrop:SetBackdropBorderColor(.5,.5,.5,1)
+        pfUI.bags[bag].slots[slot].frame.backdrop:SetBackdropColor(.5,.5,.5,1)
       end
     else
       local bagtype = GetBagFamily(bag)
@@ -485,6 +486,7 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
         pfUI.bags[bag].slots[slot].frame.backdrop:SetBackdropColor(.5,1,1,.5)
       else
         pfUI.bags[bag].slots[slot].frame.backdrop:SetBackdropBorderColor(1,1,1,.2)
+        pfUI.bags[bag].slots[slot].frame.backdrop:SetBackdropColor(1,1,1,.2)
       end
     end
 
