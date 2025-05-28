@@ -192,6 +192,10 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
 
   pfUI.BACKPACK = { -2, 0, 1, 2, 3, 4 }
   pfUI.BANK = { -1, 5, 6, 7, 8, 9, 10, 11 }
+  
+  -- get the color settings
+  br, bg, bb, ba = pfUI.api.GetStringColor(pfUI_config.appearance.border.background)
+  --er, eg, eb, ea = pfUI.api.GetStringColor(pfUI_config.appearance.border.color)
 
   pfUI.bags = {}
   pfUI.slots = {}
@@ -467,7 +471,7 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
         pfUI.bags[bag].slots[slot].frame.qtext:SetText("?")
       else
         pfUI.bags[bag].slots[slot].frame.backdrop:SetBackdropBorderColor(.5,.5,.5,1)
-        pfUI.bags[bag].slots[slot].frame.backdrop:SetBackdropColor(.5,.5,.5,1)
+        pfUI.bags[bag].slots[slot].frame.backdrop:SetBackdropColor(br, bg, bb, ba)
       end
     else
       local bagtype = GetBagFamily(bag)
@@ -486,7 +490,7 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
         pfUI.bags[bag].slots[slot].frame.backdrop:SetBackdropColor(.5,1,1,.5)
       else
         pfUI.bags[bag].slots[slot].frame.backdrop:SetBackdropBorderColor(1,1,1,.2)
-        pfUI.bags[bag].slots[slot].frame.backdrop:SetBackdropColor(1,1,1,.2)
+        pfUI.bags[bag].slots[slot].frame.backdrop:SetBackdropColor(br, bg, bb, ba)
       end
     end
 
