@@ -228,6 +228,8 @@ local nostalgia = {
     ["gryphons"] = {
       ["anchor_right"] = "pfActionBarMain",
       ["anchor_left"] = "pfActionBarMain",
+      ["offset_h"] = "-60",
+      ["size"] = "80",
       ["texture"] = "Gryphon",
     },
     ["bar11"] = {
@@ -271,11 +273,17 @@ local nostalgia = {
     },
   },
   ["appearance"] = {
+    ["castbar"] = {
+      ["texture"] = "Interface\\AddOns\\pfUI\\img\\bar_gradient",
+    },
     ["border"] = {
       ["force_blizz"] = "1",
       ["color"] = "0.7,0.7,0.7,1",
       ["background"] = "0.1,0.1,0.1,0.7",
     },
+  },
+  ["nameplates"] = {
+    ["healthtexture"] = "Interface\\AddOns\\pfUI\\img\\bar_gradient",
   },
   ["global"] = {
     ["font_blizzard"] = "1",
@@ -425,6 +433,7 @@ local slim = {
     ["tdebuff"] = {
       ["enable"] = "1",
       ["height"] = "14",
+      ["selfdebuff"] = "1",
     },
   },
   ["chat"] = {
